@@ -1,6 +1,5 @@
 package org.trello4j;
 
-
 /**
  * The Class TrelloURL.
  */
@@ -44,6 +43,7 @@ public class TrelloURL {
 	public static final String LIST_ACTIONS_URL = "https://api.trello.com/1/lists/{0}/action";
 	public static final String LIST_BOARD_URL = "https://api.trello.com/1/lists/{0}/board";
 	public static final String LIST_CARDS_URL = "https://api.trello.com/1/lists/{0}/cards";
+	public static final String LIST_POST_URL = "https://api.trello.com/1/lists";
 	public static final String MEMBER_ACTIONS_URL = "https://api.trello.com/1/members/{0}/actions";
 	public static final String MEMBER_BOARD_INVITED_URL = "https://api.trello.com/1/members/{0}/boardInvited";
 	public static final String MEMBER_CARDS_URL = "https://api.trello.com/1/members/{0}/cards";
@@ -79,9 +79,7 @@ public class TrelloURL {
 
 	private String[] filters = null;
 
-
-    public static TrelloURL create(String apiKey, String url,
-			String... pathParams) {
+	public static TrelloURL create(String apiKey, String url, String... pathParams) {
 		return new TrelloURL(apiKey, url, pathParams);
 	}
 
@@ -103,20 +101,15 @@ public class TrelloURL {
 
 	public String build() {
 		if (apiKey == null || url == null) {
-			throw new NullPointerException(
-					"Cannot build trello URL: API key and URL must be set");
+			throw new NullPointerException("Cannot build trello URL: API key and URL must be set");
 		}
 
-		return new StringBuilder()
-				.append(createUrlWithPathParams())
-				.append(createAuthQueryString())
-				.append(createFilterQuery())
-				.toString();
+		return new StringBuilder().append(createUrlWithPathParams()).append(createAuthQueryString()).append(createFilterQuery()).toString();
 	}
 
 	private String createFilterQuery() {
 		String filterStr = "";
-		if (this.filters != null) {
+		if (filters != null) {
 			StringBuilder sb = new StringBuilder(FILTER_QUERY_PARAM);
 			for (int i = 0; i < filters.length; i++) {
 				sb.append(i > 0 ? "," : "").append(filters[i]);
@@ -129,18 +122,18 @@ public class TrelloURL {
 	private String createAuthQueryString() {
 		StringBuilder sb = new StringBuilder(KEY_QUERY_PARAM).append(apiKey);
 
-		if (this.token != null) {
-			sb.append(TOKEN_QUERY_PARAM).append(this.token);
+		if (token != null) {
+			sb.append(TOKEN_QUERY_PARAM).append(token);
 		}
 		return sb.toString();
 	}
 
 	private String createUrlWithPathParams() {
-		if (pathParams == null || pathParams.length == 0) return url;
+		if (pathParams == null || pathParams.length == 0)
+			return url;
 		String compiledUrl = null;
 		for (int i = 0; i < pathParams.length; i++) {
-			compiledUrl = url.replaceAll(PATH_PARAM_ARG_PREFIX + i
-					+ PATH_PARAM_ARG_SUFFIX, pathParams[i]);
+			compiledUrl = url.replaceAll(PATH_PARAM_ARG_PREFIX + i + PATH_PARAM_ARG_SUFFIX, pathParams[i]);
 		}
 		// boardUrl += authQueryString;
 		return compiledUrl;
